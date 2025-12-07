@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f5f2ec;
+  color: #111111;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+}
+
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
