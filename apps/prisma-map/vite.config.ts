@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react-swc';
 
 export default defineConfig({
   plugins: [react()],
+  base: "/prisma-map/",
   resolve: {
     alias: {
       '@prisma/config': path.resolve(__dirname, '../../packages/prisma-config/src')
