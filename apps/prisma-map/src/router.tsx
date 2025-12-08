@@ -6,6 +6,7 @@ import { RouteDetailPage } from './pages/RouteDetailPage';
 import { LivePage } from './pages/LivePage';
 import { AboutPage } from './pages/AboutPage';
 import { DocPage } from './pages/DocPage';
+import { RoutesPage } from './pages/RoutesPage';
 import { OperatorPage } from './pages/OperatorPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
@@ -13,10 +14,12 @@ export function AppRoutes() {
   return useRoutes([
     { path: '/', element: <Landing /> },
     { path: '/map', element: <MapPage /> },
+    { path: '/routes', element: <RoutesPage /> },
     { path: '/routes/:id', element: <RouteDetailPage /> },
     { path: '/live', element: <LivePage /> },
     { path: '/about', element: <AboutPage /> },
     { path: '/doc', element: <DocPage /> },
+    { path: '/docs', element: <DocPage /> },
     { path: '/operator', element: <OperatorPage /> },
     { path: '*', element: <NotFoundPage /> },
   ]);

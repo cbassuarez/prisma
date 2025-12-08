@@ -1,5 +1,6 @@
 import React from 'react';
-import { getPhase, Phase } from '@prisma/config';
+import { Phase } from '@prisma/config';
+import { usePhase } from '../state/PhaseContext';
 
 interface Props {
   allowed: Phase[];
@@ -8,7 +9,7 @@ interface Props {
 }
 
 export const PhaseGuard: React.FC<Props> = ({ allowed, fallback = null, children }) => {
-  const phase = getPhase();
+  const { phase } = usePhase();
   if (!allowed.includes(phase)) return <>{fallback}</>;
   return <>{children}</>;
 };

@@ -3,6 +3,8 @@ import type {
   FloorId,
   RouteId,
   Phase,
+  PhaseOverride,
+  PhaseResult,
   MapPhaseMode,
   RouteProgress
 } from './types';
@@ -12,12 +14,55 @@ const showEndISO = '2025-04-22T21:30:00-07:00';
 
 const performanceStartISO = '2025-04-22T20:00:00-07:00';
 
+const EVENT_START_UTC = '2025-04-23T03:00:00.000Z';
+const EVENT_DURATION_MINUTES = 40;
+
+function getEventBounds() {
+  const start = new Date(EVENT_START_UTC);
+  const end = new Date(start.getTime() + EVENT_DURATION_MINUTES * 60_000);
+  return { start, end };
+}
+
 export const prismaMapConfig: PrismaMapConfig = {
   bounds: {
     svgViewBox: [0, 0, 600, 400]
   },
   floors: ['sub', 'l2', 'l3'],
   beastNodeId: 'wildBeast',
+  routeMeta: {
+    A: {
+      id: 'A',
+      color: '#e34e4e',
+      labelShort: 'outskirts',
+      labelLong: 'end of the world → wild beast',
+      description:
+        'Route A skims the outer rail of campus: END OF THE WORLD to the WILD BEAST, hugging the perimeter and staying just outside the warm light.'
+    },
+    B: {
+      id: 'B',
+      color: '#2f66d0',
+      labelShort: 'sublevel',
+      labelLong: 'sublevel → main gal → wild beast',
+      description:
+        'Route B surfaces from the SUBLEVEL, tracks the LIBRARY and MAIN GALLERY spine, then tilts toward the WILD BEAST in a long exhale.'
+    },
+    C: {
+      id: 'C',
+      color: '#e0b422',
+      labelShort: 'interior hallways',
+      labelLong: 'hallways → main gal → wild beast',
+      description:
+        'Route C moves through the interior hallways, weaving the nested spines before spilling out at MAIN GALLERY and down to the BEAST.'
+    },
+    D: {
+      id: 'D',
+      color: '#2f9d4d',
+      labelShort: 'backline',
+      labelLong: 'art lots → steve’s → wild beast',
+      description:
+        'Route D traces the art lots and backline, passing through STEVE’S before the final descent to the WILD BEAST.'
+    }
+  },
   schedule: {
     performanceStartIso: performanceStartISO,
     performanceDurationMinutes: 30,
@@ -238,15 +283,30 @@ export function getRouteProgress(routeId: RouteId, now: Date = new Date()): Rout
   return { mode, normalizedT: Math.min(Math.max(loopT, 0), 1) };
 }
 
-export function getPhase(now: Date = new Date()): Phase {
-  const start = new Date(showStartISO).getTime();
-  const end = new Date(showEndISO).getTime();
-  const t = now.getTime();
+export function computeScheduledPhase(now: Date = new Date()): PhaseResult {
+  const { start, end } = getEventBounds();
+  const nowTime = now.getTime();
 
-  if (t < start - 1000 * 60 * 60 * 24) return 'pre';
-  if (t < start - 15 * 60 * 1000) return 'day-of-early';
-  if (t >= start && t <= end) return 'live';
-  if (t > end && t <= end + 2 * 60 * 60 * 1000) return 'day-of-late';
-  if (t <= end + 24 * 60 * 60 * 1000) return 'day-after';
-  return 'archive';
+  if (nowTime < start.getTime()) {
+    return { phase: 'pre', nextChangeAt: start };
+  }
+  if (nowTime <= end.getTime()) {
+    return { phase: 'live', nextChangeAt: end };
+  }
+  return { phase: 'archive', nextChangeAt: null };
+}
+
+export interface GetPhaseOptions {
+  now?: Date;
+  override?: PhaseOverride;
+}
+
+export function getPhase(options: GetPhaseOptions = {}): PhaseResult {
+  const { now = new Date(), override } = options;
+
+  if (override && override !== 'auto') {
+    return { phase: override, nextChangeAt: null };
+  }
+
+  return computeScheduledPhase(now);
 }

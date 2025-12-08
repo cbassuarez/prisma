@@ -125,7 +125,7 @@ export const AudienceMap: React.FC<Props> = () => {
 
               /* Floor groups: only one active at a time */
               /* SUBLEVEL (hidden by default in this postcard) */
-              <g id="floor-sub" data-floor="sub" style="display:none;">
+              <g id="floor-sub" data-floor="sub" style={{ display: 'none' }}>
                 /* simple corridor suggestion */
                 <rect x="210" y="220" width="190" height="18" className="corridor" />
                 /* sub-level label */
@@ -164,7 +164,7 @@ export const AudienceMap: React.FC<Props> = () => {
               </g>
 
               /* LEVEL 3 (hidden in this postcard) */
-              <g id="floor-l3" data-floor="l3" style="display:none;">
+              <g id="floor-l3" data-floor="l3" style={{ display: 'none' }}>
                 /* main L3 corridor */
                 <rect x="210" y="140" width="190" height="16" className="corridor" />
                 /* Main Gallery */
@@ -354,8 +354,8 @@ export const AudienceMap: React.FC<Props> = () => {
               </g>
 
               /* Animated cursor + user location placeholders for app */
-              <circle id="cursorDot" className="cursor-dot" cx="95" cy="190" r="4" style="visibility:hidden;" />
-              <circle id="userDot" className="user-dot" cx="80" cy="260" r="6" style="visibility:hidden;" />
+              <circle id="cursorDot" className="cursor-dot" cx="95" cy="190" r="4" style={{ visibility: 'hidden' }} />
+              <circle id="userDot" className="user-dot" cx="80" cy="260" r="6" style={{ visibility: 'hidden' }} />
             </g>
 
             /* Bottom bar (app-style) */

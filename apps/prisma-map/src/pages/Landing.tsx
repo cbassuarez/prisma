@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { prismaMapConfig, getPhase, Phase } from '@prisma/config';
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import { prismaMapConfig, Phase } from '@prisma/config';
 import { RitualPhaseStrip } from '../components/RitualPhaseStrip';
 import { RitualMiniMap } from '../components/RitualMiniMap';
+import { usePhase } from '../state/PhaseContext';
 
 const glitchVariants = {
   animate: {
@@ -33,14 +34,14 @@ const ghostLabels = [
 
 const phaseToCta = (phase: Phase) => {
   if (phase === 'live') return { label: 'Choose a route to follow', variant: 'live' as const };
-  if (phase === 'day-of-late' || phase === 'day-after' || phase === 'archive') {
+  if (phase === 'archive') {
     return { label: 'Traverse the traces', variant: 'trace' as const };
   }
   return { label: 'Explore the map', variant: 'pre' as const };
 };
 
 const phaseInvocation = (phase: Phase) => {
-  if (phase === 'day-after' || phase === 'archive' || phase === 'day-of-late') {
+  if (phase === 'archive') {
     return {
       intro:
         'These routes once carried performers and audiences through the corridors. The lines still hum; the traces stay warm.',
@@ -58,7 +59,7 @@ const phaseInvocation = (phase: Phase) => {
 };
 
 export const Landing: React.FC = () => {
-  const phase = getPhase();
+  const { phase } = usePhase();
   const { label: ctaLabel, variant: ctaVariant } = phaseToCta(phase);
   const invocationCopy = phaseInvocation(phase);
   const { scrollYProgress } = useScroll();
@@ -302,8 +303,8 @@ const FooterStrip: React.FC = () => {
 };
 
 interface LandingBackgroundProps {
-  ripple: ReturnType<typeof useTransform>;
-  parallax: ReturnType<typeof useTransform>;
+  ripple: MotionValue<number>;
+  parallax: MotionValue<number>;
 }
 
 const LandingBackground: React.FC<LandingBackgroundProps> = ({ ripple, parallax }) => {

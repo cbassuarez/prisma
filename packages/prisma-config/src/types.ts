@@ -33,6 +33,14 @@ export interface PrismaRouteMeta {
   fieldManualSteps: string[];
 }
 
+export interface RouteMeta {
+  id: RouteId;
+  color: string;
+  labelShort: string;
+  labelLong: string;
+  description: string;
+}
+
 export interface Route extends PrismaRouteMeta {
   color: string;
   displayName: string;
@@ -51,7 +59,14 @@ export interface CampusBounds {
   };
 }
 
-export type Phase = 'pre' | 'day-of-early' | 'live' | 'day-of-late' | 'day-after' | 'archive';
+export type Phase = 'pre' | 'live' | 'archive';
+export type PhaseOverride = Phase | 'auto';
+
+export interface PhaseResult {
+  phase: Phase;
+  /** When the next automatic phase change will occur, or null if none. */
+  nextChangeAt: Date | null;
+}
 
 export interface ShowTiming {
   startISO: string;
@@ -73,6 +88,7 @@ export interface PrismaMapConfig {
   floors: FloorId[];
   nodes: Node[];
   routes: Route[];
+  routeMeta: Record<RouteId, RouteMeta>;
   beastNodeId: string;
   show: ShowTiming;
   operator: OperatorConfig;
