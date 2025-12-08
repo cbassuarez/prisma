@@ -1,5 +1,6 @@
 export type FloorId = 'sub' | 'l2' | 'l3';
 export type RouteId = 'A' | 'B' | 'C' | 'D';
+export type MapPhaseMode = 'pre' | 'live' | 'trace';
 
 export interface SvgPoint {
   x: number;
@@ -22,8 +23,17 @@ export interface RouteSegment {
   floor: FloorId | 'outdoor';
 }
 
-export interface Route {
+export interface PrismaRouteMeta {
   id: RouteId;
+  code: 'A' | 'B' | 'C' | 'D';
+  colorKey: 'red' | 'blue' | 'yellow' | 'green';
+  codename: string;
+  shortLabel: string;
+  floorHint: 'SUB' | 'L2' | 'L3' | 'mixed';
+  fieldManualSteps: string[];
+}
+
+export interface Route extends PrismaRouteMeta {
   color: string;
   displayName: string;
   description: string;
@@ -52,6 +62,12 @@ export interface OperatorConfig {
   password: string;
 }
 
+export interface PrismaMapSchedule {
+  performanceStartIso: string;
+  performanceDurationMinutes: number;
+  traceLoopDurationSeconds: number;
+}
+
 export interface PrismaMapConfig {
   bounds: CampusBounds;
   floors: FloorId[];
@@ -60,4 +76,10 @@ export interface PrismaMapConfig {
   beastNodeId: string;
   show: ShowTiming;
   operator: OperatorConfig;
+  schedule: PrismaMapSchedule;
+}
+
+export interface RouteProgress {
+  mode: MapPhaseMode;
+  normalizedT: number;
 }

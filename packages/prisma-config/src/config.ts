@@ -2,11 +2,15 @@ import type {
   PrismaMapConfig,
   FloorId,
   RouteId,
-  Phase
+  Phase,
+  MapPhaseMode,
+  RouteProgress
 } from './types';
 
 const showStartISO = '2025-04-22T20:00:00-07:00';
 const showEndISO = '2025-04-22T21:30:00-07:00';
+
+const performanceStartISO = '2025-04-22T20:00:00-07:00';
 
 export const prismaMapConfig: PrismaMapConfig = {
   bounds: {
@@ -14,6 +18,11 @@ export const prismaMapConfig: PrismaMapConfig = {
   },
   floors: ['sub', 'l2', 'l3'],
   beastNodeId: 'wildBeast',
+  schedule: {
+    performanceStartIso: performanceStartISO,
+    performanceDurationMinutes: 30,
+    traceLoopDurationSeconds: 15
+  },
   show: {
     startISO: showStartISO,
     endISO: showEndISO
@@ -96,6 +105,17 @@ export const prismaMapConfig: PrismaMapConfig = {
   routes: [
     {
       id: 'A',
+      code: 'A',
+      colorKey: 'red',
+      codename: 'outskirts',
+      shortLabel: 'A · outskirts',
+      floorHint: 'mixed',
+      fieldManualSteps: [
+        'Start at END OF THE WORLD; align with the outer rail.',
+        'Move east along the perimeter path toward the main quad.',
+        'Sweep past MARK TAPER; keep the courtyard on your right.',
+        'Descend toward THE WILD BEAST; finish at the ring.'
+      ],
       color: '#e34e4e',
       displayName: 'Route A',
       description: 'End of the World → perimeter → courtyard → Beast.',
@@ -107,6 +127,17 @@ export const prismaMapConfig: PrismaMapConfig = {
     },
     {
       id: 'B',
+      code: 'B',
+      colorKey: 'blue',
+      codename: 'sublevel',
+      shortLabel: 'B · sublevel',
+      floorHint: 'mixed',
+      fieldManualSteps: [
+        'Depart SUBLEVEL; surface toward LIBRARY.',
+        'Track east through STEVE’S spine; keep north wall close.',
+        'Ascend to GALLERY then pivot to MAIN ENTRANCE.',
+        'Exit toward MARK TAPER; follow the descent to the BEAST.'
+      ],
       color: '#2f66d0',
       displayName: 'Route B',
       description: 'SUBLEVEL → Library → Steve’s → Gallery/Entrance → Beast.',
@@ -122,6 +153,17 @@ export const prismaMapConfig: PrismaMapConfig = {
     },
     {
       id: 'C',
+      code: 'C',
+      colorKey: 'yellow',
+      codename: 'interior',
+      shortLabel: 'C · interior',
+      floorHint: 'mixed',
+      fieldManualSteps: [
+        'Enter interior hallway; move through the nested spines.',
+        'Climb toward MAIN GALLERY; keep to the brighter edge.',
+        'Continue to MAIN ENTRANCE; align with glass frontage.',
+        'Release into courtyard; angle to MARK TAPER then BEAST.'
+      ],
       color: '#e0b422',
       displayName: 'Route C',
       description: 'Interior hallways → Entrance → Beast.',
@@ -135,6 +177,17 @@ export const prismaMapConfig: PrismaMapConfig = {
     },
     {
       id: 'D',
+      code: 'D',
+      colorKey: 'green',
+      codename: 'backline',
+      shortLabel: 'D · backline',
+      floorHint: 'mixed',
+      fieldManualSteps: [
+        'Launch from back corridors; hug the service edge.',
+        'Thread the angled bends toward the interior spine.',
+        'Climb through GALLERY / ENTRANCE stack; keep tempo steady.',
+        'Flow out to MARK TAPER; trace the slope to the BEAST.'
+      ],
       color: '#2f9d4d',
       displayName: 'Route D',
       description: 'Back corridors → interior nodes → Beast.',
@@ -149,6 +202,41 @@ export const prismaMapConfig: PrismaMapConfig = {
     }
   ]
 };
+
+export function getMapPhaseMode(now: Date = new Date()): MapPhaseMode {
+  const start = new Date(prismaMapConfig.schedule.performanceStartIso);
+  const durationMs = prismaMapConfig.schedule.performanceDurationMinutes * 60_000;
+  const end = new Date(start.getTime() + durationMs);
+  const nowMs = now.getTime();
+
+  if (nowMs < start.getTime()) return 'pre';
+  if (nowMs <= end.getTime()) return 'live';
+  return 'trace';
+}
+
+export function getRouteProgress(routeId: RouteId, now: Date = new Date()): RouteProgress {
+  const mode = getMapPhaseMode(now);
+  const { schedule } = prismaMapConfig;
+  const start = new Date(schedule.performanceStartIso);
+  const durationMs = schedule.performanceDurationMinutes * 60_000;
+  const end = new Date(start.getTime() + durationMs);
+  const nowMs = now.getTime();
+
+  if (mode === 'pre') {
+    return { mode, normalizedT: 0 };
+  }
+
+  if (mode === 'live') {
+    const elapsed = nowMs - start.getTime();
+    const t = Math.min(Math.max(elapsed / durationMs, 0), 1);
+    return { mode, normalizedT: t };
+  }
+
+  const loopMs = schedule.traceLoopDurationSeconds * 1000;
+  const loopElapsed = (nowMs - end.getTime()) % loopMs;
+  const loopT = loopElapsed / loopMs;
+  return { mode, normalizedT: Math.min(Math.max(loopT, 0), 1) };
+}
 
 export function getPhase(now: Date = new Date()): Phase {
   const start = new Date(showStartISO).getTime();
