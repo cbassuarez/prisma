@@ -9,12 +9,12 @@ import type {
   RouteProgress
 } from './types';
 
-const showStartISO = '2025-04-22T20:00:00-07:00';
-const showEndISO = '2025-04-22T21:30:00-07:00';
+const showStartISO = '2026-04-22T20:00:00-07:00';
+const showEndISO = '2026-04-22T21:30:00-07:00';
 
-const performanceStartISO = '2025-04-22T20:00:00-07:00';
+const performanceStartISO = '2026-04-22T20:00:00-07:00';
 
-const EVENT_START_UTC = '2025-04-23T03:00:00.000Z';
+const EVENT_START_UTC = '2026-04-23T03:00:00.000Z';
 const EVENT_DURATION_MINUTES = 40;
 
 function getEventBounds() {
