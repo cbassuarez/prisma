@@ -7,6 +7,7 @@ import { LivePage } from './pages/LivePage';
 import { AboutPage } from './pages/AboutPage';
 import { DocPage } from './pages/DocPage';
 import { OperatorPage } from './pages/OperatorPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 export function AppRoutes() {
   return useRoutes([
@@ -16,6 +17,7 @@ export function AppRoutes() {
     { path: '/live', element: <LivePage /> },
     { path: '/about', element: <AboutPage /> },
     { path: '/doc', element: <DocPage /> },
-    { path: '/operator', element: <OperatorPage /> }
+    { path: '/operator', element: <OperatorPage /> },
+    { path: '*', element: <NotFoundPage /> },
   ]);
 }

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PRISMA · Not Found</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <script>
+      // Store the original path so the SPA can restore it after redirect.
+      var redirectPath = window.location.pathname + window.location.search + window.location.hash;
+      try {
+        window.sessionStorage.setItem('prisma_redirect_path', redirectPath);
+      } catch (e) {
+        // ignore
+      }
+
+      // Base path for the app; update this if you deploy under a subpath.
+      var redirectBase = '/';
+      window.location.replace(redirectBase);
+    </script>
+  </body>
+</html>
