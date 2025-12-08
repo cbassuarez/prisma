@@ -21,14 +21,17 @@ if (storedRedirectPath) {
   } catch {
     // ignore
   }
-  if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+  if (window.location.pathname === '/prisma/' || window.location.pathname === '/prisma/index.html') {
     window.history.replaceState(null, '', storedRedirectPath);
   }
 }
 
+// NEW: base name from Vite
+const basename = import.meta.env.BASE_URL ?? '/';
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </React.StrictMode>,
