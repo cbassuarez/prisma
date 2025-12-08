@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import './styles/index.css';
+import { PhaseProvider } from './state/PhaseContext';
 
 // GitHub Pages 404 redirect recovery:
 // If the 404.html script stored an original path, restore it here so
@@ -31,8 +32,10 @@ const basename = import.meta.env.BASE_URL ?? '/';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter basename={basename}>
-      <App />
-    </BrowserRouter>
+    <PhaseProvider>
+      <BrowserRouter basename={basename}>
+        <App />
+      </BrowserRouter>
+    </PhaseProvider>
   </React.StrictMode>,
 );

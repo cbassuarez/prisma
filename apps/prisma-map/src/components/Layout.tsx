@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { TimePhaseBanner } from './TimePhaseBanner';
+import { PhaseTransitionLayer } from './PhaseTransitionLayer';
 
 interface Props {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ export const Layout: React.FC<Props> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-prisma-paper text-prisma-ink flex flex-col">
+      <PhaseTransitionLayer />
       <header className="px-4 py-3 border-b border-neutral-300 flex items-center justify-between">
         <Link to="/" className="font-serif text-lg tracking-wide">
           PRISMA · CalArts Edition
@@ -19,7 +21,7 @@ export const Layout: React.FC<Props> = ({ children }) => {
           <Link to="/map" className={location.pathname.startsWith('/map') ? 'underline' : ''}>
             Map
           </Link>
-          <Link to="/routes/A" className={location.pathname.startsWith('/routes') ? 'underline' : ''}>
+          <Link to="/routes" className={location.pathname.startsWith('/routes') ? 'underline' : ''}>
             Routes
           </Link>
           <Link to="/live" className={location.pathname.startsWith('/live') ? 'underline' : ''}>

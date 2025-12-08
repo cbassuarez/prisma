@@ -8,20 +8,14 @@ interface RitualPhaseStripProps {
 
 const phaseLabel: Record<Phase, string> = {
   pre: 'SIM',
-  'day-of-early': 'SIM',
   live: 'LIVE',
-  'day-of-late': 'TRACE',
-  'day-after': 'TRACE',
-  archive: 'TRACE',
+  archive: 'TRACE'
 };
 
 const phaseLine: Record<Phase, string> = {
   pre: 'Routes are drawn but dormant until the performance.',
-  'day-of-early': 'Routes are drawn but dormant until the performance.',
   live: 'Routes are awake in the corridors tonight.',
-  'day-of-late': 'Afterimage · the routes have been walked; echoes remain.',
-  'day-after': 'Afterimage · the routes have been walked; echoes remain.',
-  archive: 'Afterimage · the routes have been walked; echoes remain.',
+  archive: 'Afterimage · the routes have been walked; echoes remain.'
 };
 
 export const RitualPhaseStrip: React.FC<RitualPhaseStripProps> = ({ phase }) => {
